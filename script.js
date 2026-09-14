@@ -1,47 +1,41 @@
-// const navToggle = document.getElementById('navToggle');
-// const navLinks = document.getElementById('navLinks');
+/* =========================
+   SUPABASE
+========================= */
 
-// if (navToggle && navLinks) {
-//   navToggle.addEventListener('click', () => {
-//     const open = navLinks.classList.toggle('nav-open');
-//     navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-//   });
+const SUPABASE_URL = "https://qpqyljcoaqmjswqjwmkx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_...";
 
-//   navLinks.querySelectorAll('a').forEach((link) => {
-//     link.addEventListener('click', () => {
-//       navLinks.classList.remove('nav-open');
-//     });
-//   });
-// }
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 
 /* =========================
    MOBILE NAVIGATION
 ========================= */
 
-const navToggle = document.getElementById('navToggle');
-
-const navLinks = document.getElementById('navLinks');
+const navToggle = document.getElementById("navToggle");
+const navLinks = document.getElementById("navLinks");
 
 if (navToggle && navLinks) {
 
-  navToggle.addEventListener('click', () => {
+  navToggle.addEventListener("click", () => {
 
-    const open = navLinks.classList.toggle('nav-open');
+    const open = navLinks.classList.toggle("nav-open");
 
     navToggle.setAttribute(
-      'aria-expanded',
-      open ? 'true' : 'false'
+      "aria-expanded",
+      open ? "true" : "false"
     );
 
   });
 
+  navLinks.querySelectorAll("a").forEach((link) => {
 
-  navLinks.querySelectorAll('a').forEach((link) => {
+    link.addEventListener("click", () => {
 
-    link.addEventListener('click', () => {
-
-      navLinks.classList.remove('nav-open');
+      navLinks.classList.remove("nav-open");
 
     });
 
@@ -55,21 +49,50 @@ if (navToggle && navLinks) {
 ========================= */
 
 const reviewForm = document.getElementById("reviewForm");
-
 const reviewsList = document.getElementById("reviewsList");
 
-
-// Get saved reviews
-let reviews =
-  JSON.parse(localStorage.getItem("shifaReviews")) || [];
-
-
-// Reviews shown per page
 const reviewsPerPage = 3;
 
-
-// Current review page
+let reviews = [];
 let currentReviewPage = 0;
+
+
+/* =========================
+   LOAD REVIEWS FROM SUPABASE
+========================= */
+
+async function loadReviews() {
+
+  if (!reviewsList) {
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("reviews")
+    .select("id, name, rating, message, created_at")
+    .eq("approved", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+
+    console.error("Error loading reviews:", error);
+
+    reviewsList.innerHTML = `
+      <p style="text-align:center; grid-column:1/-1;">
+        Unable to load reviews right now.
+      </p>
+    `;
+
+    return;
+  }
+
+  reviews = data || [];
+
+  currentReviewPage = 0;
+
+  displayReviews();
+
+}
 
 
 /* =========================
@@ -82,12 +105,8 @@ function displayReviews() {
     return;
   }
 
-
-  // Clear existing reviews
   reviewsList.innerHTML = "";
 
-
-  // Navigation elements
   const reviewsNavigation =
     document.getElementById("reviewsNavigation");
 
@@ -113,11 +132,9 @@ function displayReviews() {
       </p>
     `;
 
-
     if (reviewsNavigation) {
       reviewsNavigation.style.display = "none";
     }
-
 
     return;
   }
@@ -131,18 +148,10 @@ function displayReviews() {
     Math.ceil(reviews.length / reviewsPerPage);
 
 
-  // Make sure page still exists
   if (currentReviewPage >= totalPages) {
-
-    currentReviewPage =
-      totalPages - 1;
-
+    currentReviewPage = totalPages - 1;
   }
 
-
-  /* =========================
-     GET CURRENT 3 REVIEWS
-  ========================= */
 
   const startIndex =
     currentReviewPage * reviewsPerPage;
@@ -163,13 +172,10 @@ function displayReviews() {
     const firstLetter =
       review.name.charAt(0).toUpperCase();
 
-
     const card =
       document.createElement("div");
 
-
     card.className = "review-card";
-
 
     card.innerHTML = `
 
@@ -186,18 +192,15 @@ function displayReviews() {
 
       </div>
 
-
       <p class="review-text">
         "${escapeHTML(review.message)}"
       </p>
-
 
       <div class="review-author">
 
         <div class="review-avatar">
           ${escapeHTML(firstLetter)}
         </div>
-
 
         <div>
 
@@ -215,7 +218,6 @@ function displayReviews() {
 
     `;
 
-
     reviewsList.appendChild(card);
 
   });
@@ -228,13 +230,9 @@ function displayReviews() {
   if (reviewsNavigation) {
 
     if (reviews.length > reviewsPerPage) {
-
       reviewsNavigation.style.display = "flex";
-
     } else {
-
       reviewsNavigation.style.display = "none";
-
     }
 
   }
@@ -286,7 +284,7 @@ if (reviewForm) {
 
   reviewForm.addEventListener(
     "submit",
-    function (event) {
+    async function (event) {
 
       event.preventDefault();
 
@@ -301,14 +299,12 @@ if (reviewForm) {
           .value
           .trim();
 
-
       const rating =
         Number(
           document
             .getElementById("reviewRating")
             .value
         );
-
 
       const message =
         document
@@ -323,8 +319,47 @@ if (reviewForm) {
 
       if (!name || !rating || !message) {
 
+        alert("Please fill in all fields.");
+
+        return;
+
+      }
+
+      if (rating < 1 || rating > 5) {
+
+        alert("Please select a rating between 1 and 5.");
+
+        return;
+
+      }
+
+
+      /* =========================
+         SUBMIT TO SUPABASE
+      ========================= */
+
+      const { error } = await supabaseClient
+        .from("reviews")
+        .insert([
+          {
+            name: name,
+            rating: rating,
+            message: message,
+            approved: false
+          }
+        ]);
+
+
+      /* =========================
+         HANDLE ERROR
+      ========================= */
+
+      if (error) {
+
+        console.error("Error submitting review:", error);
+
         alert(
-          "Please fill in all fields."
+          "Sorry, your review could not be submitted. Please try again."
         );
 
         return;
@@ -333,64 +368,13 @@ if (reviewForm) {
 
 
       /* =========================
-         CREATE NEW REVIEW
-      ========================= */
-
-      const newReview = {
-
-        name: name,
-
-        rating: rating,
-
-        message: message
-
-      };
-
-
-      /* =========================
-         ADD REVIEW TO BEGINNING
-      ========================= */
-
-      reviews.unshift(newReview);
-
-
-      /* =========================
-         SAVE REVIEW
-      ========================= */
-
-      localStorage.setItem(
-        "shifaReviews",
-        JSON.stringify(reviews)
-      );
-
-
-      /* =========================
-         GO TO FIRST PAGE
-      ========================= */
-
-      currentReviewPage = 0;
-
-
-      /* =========================
-         DISPLAY REVIEWS
-      ========================= */
-
-      displayReviews();
-
-
-      /* =========================
-         CLEAR FORM
+         SUCCESS
       ========================= */
 
       reviewForm.reset();
 
-
-      /* =========================
-         SUCCESS MESSAGE
-      ========================= */
-
       alert(
-        "Thank you! Your review has been submitted."
+        "Thank you! Your review has been submitted and is waiting for approval."
       );
 
     }
@@ -405,7 +389,6 @@ if (reviewForm) {
 
 const prevReviews =
   document.getElementById("prevReviews");
-
 
 if (prevReviews) {
 
@@ -434,7 +417,6 @@ if (prevReviews) {
 const nextReviews =
   document.getElementById("nextReviews");
 
-
 if (nextReviews) {
 
   nextReviews.addEventListener(
@@ -445,7 +427,6 @@ if (nextReviews) {
         Math.ceil(
           reviews.length / reviewsPerPage
         );
-
 
       if (
         currentReviewPage <
@@ -484,8 +465,4 @@ function escapeHTML(text) {
    LOAD REVIEWS
 ========================= */
 
-if (reviewsList) {
-
-  displayReviews();
-
-}
+loadReviews();
