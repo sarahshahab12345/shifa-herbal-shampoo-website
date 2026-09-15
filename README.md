@@ -23,6 +23,9 @@ This project was a great opportunity for me to combine my existing developer and
 
 It also reminded me that AI isn’t replacing the developer’s ideas — it can be a powerful tool for turning those ideas into something real, faster. 💻✨
 
-🔗 I’ll share the live website below.
+🌐 **Live Website:**
+https://sarahshahab12345.github.io/shifa-herbal-shampoo-website/
+
+I’m really happy to see an idea from home turn into a real, working website that can actually be used by a small business. 🌿💻
 
 #WebDevelopment #HTML #CSS #JavaScript #Supabase #GitHub #VibeCoding #AI #WebDesign #PortfolioProject #SmallBusiness #FrontendDevelopment
