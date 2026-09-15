@@ -1,34 +1,28 @@
-﻿# Shifa-Herbal-Shampoo
+I’m excited to share a project that is a little more personal for me — I designed and developed a website for my Ammi’s herbal shampoo brand, **Shifa Herbal Shampoo** 🌿
 
+I wanted to build something that wasn’t just a pretty static website, but something that actually works as a small business website.
 
-🌿 **I built a website for my Ammi’s shampoo brand — Shifa Herbal Shampoo!**
+For this project, I combined my web development knowledge with AI-assisted development / **Vibe Coding** to turn my ideas into a complete working website.
 
-I’m happy to share a project that is personally meaningful to me. ❤️
+### What I worked with:
 
-I designed and developed a website for **Shifa Herbal Shampoo**, my Ammi’s handmade herbal shampoo brand.
+• HTML
+• CSS
+• JavaScript
+• Supabase — for the Feedback & Reviews database
+• Git & GitHub — for version control and deployment
+• WhatsApp integration — so customers can directly place orders
 
-For this project, I combined my **web development and UI/design knowledge with AI-assisted development** to turn an idea into a functional, responsive website.
+One feature I particularly enjoyed building was the **customer review system**.
 
-✨ **What I worked on:**
-• Website UI/UX and responsive design
-• HTML, CSS & JavaScript
-• Product and brand presentation
-• WhatsApp-based ordering
-• Customer reviews/feedback section
-• Product ingredients and process sections
-• Image and video gallery
-• Mobile-friendly navigation
-• Deployment using GitHub Pages
+Customers can submit their feedback through the website → the review is stored in Supabase → it stays pending until I approve it → once approved, it automatically appears on the website.
 
-🤖 I also used **AI as a development partner** for brainstorming, debugging, improving code, and speeding up the development process — while making the design and implementation decisions myself.
+I also wanted the website to feel connected to the actual business, so customers can directly contact/order through the **WhatsApp button**.
 
-This project helped me understand how powerful the combination of **AI + developer skills + creativity** can be, especially when building something for a real-world business.
+This project was a great opportunity for me to combine my existing developer and design knowledge with AI tools and learn how to build something practical for a real-world use case.
 
-🔗 **Live Website:**
-[https://sarahshahab12345.github.io/Shifa-Herbal-Shampoo/](https://sarahshahab12345.github.io/shifa-herbal-shampoo-website/)
+It also reminded me that AI isn’t replacing the developer’s ideas — it can be a powerful tool for turning those ideas into something real, faster. 💻✨
 
-I’m continuing to explore **AI-assisted development, web design, Shopify, and creative digital projects**, and I'm excited to keep building more.
+🔗 I’ll share the live website below.
 
-Would love to hear your thoughts and feedback! 🌿💻
-
-#WebDevelopment #AI #AIAssistedDevelopment #FrontendDevelopment #WebDesign #JavaScript #HTML #CSS #GitHubPages #PersonalProject #SmallBusiness #Entrepreneurship
+#WebDevelopment #HTML #CSS #JavaScript #Supabase #GitHub #VibeCoding #AI #WebDesign #PortfolioProject #SmallBusiness #FrontendDevelopment
